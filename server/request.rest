@@ -1,0 +1,17 @@
+POST http://localhost:4000/user
+Content-Type: application/json
+
+{
+    "username": "Yago",
+    "password": "pw"
+}
+
+###
+
+POST http://localhost:4000/users/login
+Content-Type: application/json
+
+{
+    "username": "Yago",
+    "password": "pw"
+}
