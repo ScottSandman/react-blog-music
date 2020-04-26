@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -12,6 +12,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import axios from "axios";
 
 function Copyright() {
   return (
@@ -28,14 +29,14 @@ function Copyright() {
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(8) + 80,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: "black",
   },
   form: {
     width: "100%", // Fix IE 11 issue.
@@ -43,11 +44,58 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+    backgroundColor: "black",
   },
 }));
 
-export default function SignUp() {
+export default function SignUp({
+  username,
+  password,
+  setUsername,
+  setPassword,
+  setContent,
+}) {
   const classes = useStyles();
+  const [first, setFirst] = useState("");
+  const [last, setLast] = useState("");
+  const [subscribe, setSubscribe] = useState(false);
+
+  async function createUser() {
+    console.log(
+      "first",
+      first,
+      "last",
+      last,
+      "username",
+      username,
+      "password",
+      password,
+      "subscribe",
+      subscribe
+    );
+    try {
+      const request = await axios({
+        method: "post",
+        url: "http://localhost:4000/user",
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: {
+          firstname: first,
+          lastname: last,
+          username: username,
+          password: password,
+          subscribe: subscribe,
+        },
+      });
+      console.log("Account Created");
+      setContent("blog");
+    } catch (error) {
+      console.log("There was an error setting up your account", error);
+      setContent("blog");
+    }
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -71,6 +119,7 @@ export default function SignUp() {
                 id="firstName"
                 label="First Name"
                 autoFocus
+                onChange={(e) => setFirst(e.target.value)}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -82,6 +131,7 @@ export default function SignUp() {
                 label="Last Name"
                 name="lastName"
                 autoComplete="lname"
+                onChange={(e) => setLast(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -89,10 +139,11 @@ export default function SignUp() {
                 variant="outlined"
                 required
                 fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
+                id="username"
+                label="username"
+                name="username"
+                autoComplete="username"
+                onChange={(e) => setUsername(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -105,12 +156,16 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                onChange={(e) => setPassword(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
               <FormControlLabel
                 control={<Checkbox value="allowExtraEmails" color="primary" />}
                 label="I want to receive inspiration, marketing promotions and updates via email."
+                onChange={(e) =>
+                  e.target.checked ? setSubscribe(true) : setSubscribe(false)
+                }
               />
             </Grid>
           </Grid>
@@ -120,15 +175,12 @@ export default function SignUp() {
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={() => createUser()}
           >
             Sign Up
           </Button>
           <Grid container justify="flex-end">
-            <Grid item>
-              <Link href="#" variant="body2">
-                Already have an account? Sign in
-              </Link>
-            </Grid>
+            <Grid item></Grid>
           </Grid>
         </form>
       </div>

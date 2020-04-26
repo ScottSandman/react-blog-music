@@ -4,12 +4,15 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const db = require("mysql2/promise");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 
 const app = express();
 const PORT = 4000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 
 const pool = db.createPool({
   host: process.env.DB_HOST,
@@ -41,7 +44,7 @@ app.post("/blogPost", authorizeUser, async (request, response) => {
     const userID = await conn.query(
       `SELECT id FROM music.user WHERE username = '${request.user.username}'`
     );
-    const result = await con.query(
+    const result = await conn.query(
       `INSERT INTO music.blog (author_Id, date, title, post) VALUES (${userID[0][0].id}, CURDATE(), '${request.body.title}','${request.body.post}');`
     );
     response.status(201).send(result);
@@ -81,7 +84,7 @@ app.get("/blogs", async (request, response) => {
     console.log("RETRIEVING BLOGS");
     const conn = await pool.getConnection();
     const result = await conn.query(
-      `SELECT music.blog.id, title, date, author_id, post, username FROM music.blog JOIN music.user ON (music.blog.author_id = music.user.id)`
+      `SELECT music.blog.id, title, date, author_id, post, username FROM music.blog JOIN music.user ON (music.blog.author_id = music.user.id) ORDER BY id DESC`
     );
     response.status(201).send(result);
   } catch (error) {

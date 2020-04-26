@@ -2,8 +2,11 @@ POST http://localhost:4000/user
 Content-Type: application/json
 
 {
-    "username": "Yago",
-    "password": "pw"
+    "firstname": "Freida",
+    "lastname": "Hausenfruiten",
+    "username": "FreidaH",
+    "password": "pw",
+    "subscribe": "true"
 }
 
 ###
@@ -12,6 +15,25 @@ POST http://localhost:4000/users/login
 Content-Type: application/json
 
 {
-    "username": "Yago",
+    "username": "FreidaH",
     "password": "pw"
 }
+
+###
+
+
+POST http://localhost:4000/blogPost
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlJveHkiLCJpYXQiOjE1ODc5MTg0MjB9.qnbJ9KDAqLrRxSPXiMyRI3BDd9xMgXr7T5iz6FhCCDk
+Content-Type: application/json
+
+{
+    "author_id": 1,
+    "title": "Rock the Casbah",
+    "post": "Lorem ipsum dolor sit amet, vix at summo nemore, mei ei regione elaboraret, cum id soleat definiebas. Sed ut interesset consectetuer. Et facer luptatum eam. Sit erudit maiorum deseruisse an. Utamur fastidii mea ex, te habeo malorum quaestio vix. Dictas volumus cu pri, sea wisi meis ea. Est ea possim cotidieque efficiantur. Ut his mollis utamur, dolore ponderum sadipscing mei ea. At usu erant laoreet docendi, vel cu quem impedit verterem. Pro ad lobortis hendrerit, iuvaret quaeque mei ei. Quot veritus eum ei, nec mazim omnium denique ut. Ut officiis definitiones eos, has et nulla facilis feugait. Te sea quando volutpat, nec cu alterum tractatos gubergren, has ad unum tibique. Pri ea audiam scriptorem. Dicat oblique ne mei, sed accumsan copiosae senserit no, cu adipisci urbanitas pro. Eu eam intellegam consectetuer. Ut denique expetendis sententiae duo, mel cetero scaevola ex. Quo prima saepe eripuit eu, no vis nihil choro, no ius soleat principes quaerendum."
+}
+
+###
+
+
+GET http://localhost:4000/blogs
+Content-Type: application/json

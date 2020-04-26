@@ -12,6 +12,7 @@ import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
+import axios from "axios";
 
 function Copyright() {
   return (
@@ -56,10 +57,54 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
     backgroundColor: "black",
   },
+  signUp: {
+    cursor: "pointer",
+  },
 }));
 
-export default function SignIn({ setContent }) {
+export default function SignIn({
+  content,
+  setContent,
+  username,
+  setUsername,
+  password,
+  setPassword,
+}) {
   const classes = useStyles();
+
+  async function authUser() {
+    try {
+      console.log(username, password);
+      const request = await axios({
+        method: "post",
+        url: "http://localhost:4000/users/login",
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: {
+          username: username,
+          password: password,
+        },
+      });
+      console.log("access granted");
+      return true;
+    } catch (error) {
+      console.log("access denied", error);
+      return false;
+    }
+  }
+
+  async function loginAttempt() {
+    const accessAllowed = await authUser();
+    setPassword("");
+    if (accessAllowed) {
+      console.log("logged in");
+      setContent("blog");
+    } else {
+      console.log("failed attempt");
+    }
+  }
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -83,6 +128,7 @@ export default function SignIn({ setContent }) {
               label="Username"
               name="username"
               autoFocus
+              onChange={(e) => setUsername(e.target.value)}
             />
             <TextField
               variant="outlined"
@@ -94,6 +140,7 @@ export default function SignIn({ setContent }) {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={(e) => setPassword(e.target.value)}
             />
             <Button
               type="submit"
@@ -101,13 +148,18 @@ export default function SignIn({ setContent }) {
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={() => loginAttempt()}
             >
               Sign In
             </Button>
             <Grid container>
               <Grid item xs></Grid>
               <Grid item>
-                <Link onClick={() => setContent("signUp")} variant="body2">
+                <Link
+                  onClick={() => setContent("signUp")}
+                  variant="body2"
+                  className={classes.signUp}
+                >
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
