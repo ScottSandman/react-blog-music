@@ -3,8 +3,6 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Paper from "@material-ui/core/Paper";
 import Box from "@material-ui/core/Box";
@@ -73,6 +71,7 @@ export default function SignIn({
   const classes = useStyles();
 
   async function authUser() {
+    // setContent("blog");
     try {
       console.log(username, password);
       const request = await axios({
@@ -88,6 +87,7 @@ export default function SignIn({
         },
       });
       console.log("access granted");
+
       return true;
     } catch (error) {
       console.log("access denied", error);
@@ -96,13 +96,18 @@ export default function SignIn({
   }
 
   async function loginAttempt() {
-    const accessAllowed = await authUser();
-    setPassword("");
-    if (accessAllowed) {
-      console.log("logged in");
-      setContent("blog");
-    } else {
-      console.log("failed attempt");
+    try {
+      const accessAllowed = await authUser();
+      setPassword("");
+      if (accessAllowed) {
+        console.log("logged in");
+        await setContent("blog");
+      } else {
+        console.log("failed attempt");
+        await setContent("signIn");
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -118,7 +123,7 @@ export default function SignIn({
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <form className={classes.form} noValidate>
+          <div className={classes.form} noValidate>
             <TextField
               variant="outlined"
               margin="normal"
@@ -167,7 +172,7 @@ export default function SignIn({
             <Box mt={5}>
               <Copyright />
             </Box>
-          </form>
+          </div>
         </div>
       </Grid>
     </Grid>

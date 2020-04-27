@@ -69,7 +69,7 @@ app.post("/users/login", async (request, response) => {
     if (await bcrypt.compare(request.body.password, result[0][0].password)) {
       const userInfo = { username: request.body.username };
       const accessToken = jwt.sign(userInfo, process.env.AUTH_TOKEN);
-      console.log(userInfo, accessToken);
+      console.log("login Successful", userInfo, accessToken);
 
       response.status(202).cookie("AccessToken", accessToken).send(userInfo);
     }
@@ -89,6 +89,15 @@ app.get("/blogs", async (request, response) => {
     response.status(201).send(result);
   } catch (error) {
     console.log(error);
+    response.status(500).send(error);
+  }
+});
+
+app.post("/logout", async (request, response) => {
+  try {
+    console.log("LOGGING OUT");
+    response.status(200).cookie("AccessToken", "").send();
+  } catch (error) {
     response.status(500).send(error);
   }
 });

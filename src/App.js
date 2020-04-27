@@ -4,7 +4,7 @@ import Nav from "./components/Nav";
 import MainContent from "./components/MainContent";
 
 function App() {
-  const [content, setContent] = useState("blog");
+  const [content, setContent] = useState("signIn");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 

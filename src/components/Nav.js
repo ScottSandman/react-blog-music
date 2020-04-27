@@ -3,9 +3,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
 import { Fab } from "@material-ui/core";
 import CreateIcon from "@material-ui/icons/Create";
+import PowerSettingsNewIcon from "@material-ui/icons/PowerSettingsNew";
+import Axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,15 +33,33 @@ const useStyles = makeStyles((theme) => ({
   //   },
 }));
 
-export default function Nav({ username, content, setContent }) {
+export default function Nav({ username, setUsername, content, setContent }) {
   const classes = useStyles();
+
+  async function logout() {
+    try {
+      const request = await Axios({
+        method: "post",
+        url: "http://localhost:4000/logout",
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      setContent("signIn");
+      setUsername("");
+      console.log(await request);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   function renderButtons() {
     if (content === "blog") {
       return (
         <>
           <Fab size="small" className={classes.margin}>
-            <CreateIcon />
+            <PowerSettingsNewIcon onClick={() => logout()} />
           </Fab>
         </>
       );

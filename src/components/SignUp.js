@@ -61,18 +61,6 @@ export default function SignUp({
   const [subscribe, setSubscribe] = useState(false);
 
   async function createUser() {
-    console.log(
-      "first",
-      first,
-      "last",
-      last,
-      "username",
-      username,
-      "password",
-      password,
-      "subscribe",
-      subscribe
-    );
     try {
       const request = await axios({
         method: "post",
@@ -90,10 +78,26 @@ export default function SignUp({
         },
       });
       console.log("Account Created");
-      setContent("blog");
+      return true;
     } catch (error) {
       console.log("There was an error setting up your account", error);
-      setContent("blog");
+      return false;
+    }
+  }
+
+  async function routeUser() {
+    try {
+      const access = await createUser();
+      setPassword = "";
+      if (access) {
+        console.log("...redirect to blogs");
+        await setContent("blog");
+      } else {
+        console.log("try again");
+        await setContent("signUp");
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -107,7 +111,7 @@ export default function SignUp({
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} noValidate>
+        <div className={classes.form} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -175,14 +179,14 @@ export default function SignUp({
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={() => createUser()}
+            onClick={() => routeUser()}
           >
             Sign Up
           </Button>
           <Grid container justify="flex-end">
             <Grid item></Grid>
           </Grid>
-        </form>
+        </div>
       </div>
       <Box mt={5}>
         <Copyright />
